@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoKern AI</title>
+    <style>
+        /* Modern Design (CSS) */
+        :root {
+            --primary: #FF0000; /* YouTube Rood */
+            --bg: #f4f4f9;
+            --card: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 1.5rem; font-size: 1.8rem; }
+        
+        .input-group { margin-bottom: 1rem; text-align: left; }
+        label { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Belangrijk voor padding */
+            transition: border 0.3s;
+        }
+
+        input:focus { border-color: var(--primary); outline: none; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        button:active { transform: scale(0.98); }
+        button:hover { opacity: 0.9; }
+
+        /* Het resultaat blok */
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background: #eef2f5;
+            border-radius: 8px;
+            text-align: left;
+            line-height: 1.6;
+            display: none; /* Verborgen tot er antwoord is */
+            border-left: 5px solid var(--primary);
+        }
+
+        .loading { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📺 VideoKern AI</h1>
+        
+        <div class="input-group">
+            <label>API Key</label>
+            <input type="password" id="apiKey" placeholder="sk-or-v1...">
+        </div>
+
+        <div class="input-group">
+            <label>YouTube Link</label>
+            <input type="text" id="videoLink" placeholder="Plak je link hier...">
+        </div>
+
+        <button onclick="startSamenvatten()">⚡ Vat samen</button>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        async function startSamenvatten() {
+            const knop = document.querySelector("button");
+            const outputVeld = document.getElementById("output");
+            const apiKey = document.getElementById("apiKey").value;
+            const url = document.getElementById("videoLink").value;
+
+            if(!apiKey || !url) { alert("Vul alle velden in!"); return; }
+
+            // Loading state
+            knop.innerText = "Momentje, AI denkt na...";
+            knop.disabled = true;
+            outputVeld.style.display = "block";
+            outputVeld.innerHTML = "<span class='loading'>Transcript ophalen en analyseren...</span>";
+
+            try {
+                // Verzoek naar je lokale Backend
+                const response = await fetch("http://localhost:8000/vat-samen", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ url: url, api_key: apiKey })
+                });
+
+                const data = await response.json();
+                
+                // Resultaat tonen
+                knop.innerText = "⚡ Vat samen";
+                knop.disabled = false;
+
+                if (data.error) {
+                    outputVeld.style.borderLeft = "5px solid orange";
+                    outputVeld.innerHTML = "<strong>Foutje:</strong> " + data.error;
+                } else {
+                    outputVeld.style.borderLeft = "5px solid #00cc66"; // Groen randje bij succes
+                    // Markdown (***) een beetje netjes maken
+                    let mooieTekst = data.resultaat.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); 
+                    mooieTekst = mooieTekst.replace(/\n/g, '<br>');
+                    outputVeld.innerHTML = mooieTekst;
+                }
+            } catch (e) {
+                knop.innerText = "Probeer opnieuw";
+                knop.disabled = false;
+                outputVeld.innerText = "Kan de server niet bereiken. Draait 'backend.py' wel?";
+            }
+        }
+    </script>
+
+</body>
+</html>

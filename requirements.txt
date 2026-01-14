@@ -1,0 +1,5 @@
+﻿streamlit
+youtube-transcript-api
+openai
+pandas
+openpyxl
