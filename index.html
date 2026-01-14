@@ -119,7 +119,7 @@
 
             try {
                 // Verzoek naar je lokale Backend
-                const response = await fetch("http://localhost:8000/vat-samen", {
+                const response = await fetch("/vat-samen", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ url: url, api_key: apiKey })
