@@ -45,7 +45,7 @@ def maak_samenvatting(verzoek: VideoVerzoek):
         transcript_list = yt.list(video_id)
         transcript = transcript_list.find_transcript(['nl', 'en'])
         data = transcript.fetch()
-        full_text = " ".join([item['text'] for item in data]) # Let op: check even of dit .text of ['text'] moet zijn bij jou!
+        full_text = " ".join([item.text for item in data])
         # Als je lokaal error kreeg, gebruik dan: item.text
         
         client = OpenAI(
