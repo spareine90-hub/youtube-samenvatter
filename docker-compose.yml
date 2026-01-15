@@ -1,0 +1,23 @@
+﻿services:
+  app:
+    build: .
+    container_name: app
+    restart: always
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
