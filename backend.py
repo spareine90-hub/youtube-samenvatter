@@ -5,10 +5,17 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import os
 
 app = FastAPI()
 
-# Deze regels zijn nieuw: Als iemand naar de homepage gaat, stuur de HTML file
+# --- INSTELLINGEN ---
+HET_GEHEIME_WACHTWOORD = "geheim"
+
+# NOODOPLOSSING: We zetten de sleutel hier hard in
+# HAAL DE ONDERSTAANDE REGEL WEG EN PLAK JOUW SLEUTEL ERIN!
+OPENROUTER_API_KEY = "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"
+
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
     with open("index.html", "r") as f:
@@ -23,11 +30,16 @@ app.add_middleware(
 
 class VideoVerzoek(BaseModel):
     url: str
-    api_key: str
+    wachtwoord: str
 
 @app.post("/vat-samen")
 def maak_samenvatting(verzoek: VideoVerzoek):
-    # --- DE REST BLIJFT HETZELFDE ALS JE AL HAD ---
+    if verzoek.wachtwoord != HET_GEHEIME_WACHTWOORD:
+        return {"error": "Verkeerd wachtwoord! Geen toegang."}
+    
+    if "HIER-MOET" in OPENROUTER_API_KEY:
+        return {"error": "Je bent vergeten de sleutel in backend.py te plakken!"}
+
     print(f"Verzoek ontvangen voor: {verzoek.url}")
     
     video_id = ""
@@ -41,16 +53,14 @@ def maak_samenvatting(verzoek: VideoVerzoek):
 
     try:
         yt = YouTubeTranscriptApi()
-        # OUDE MANIER (V1): .text gebruiken ipv ['text']
         transcript_list = yt.list(video_id)
         transcript = transcript_list.find_transcript(['nl', 'en'])
         data = transcript.fetch()
         full_text = " ".join([item.text for item in data])
-        # Als je lokaal error kreeg, gebruik dan: item.text
         
         client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
-            api_key=verzoek.api_key,
+            api_key=OPENROUTER_API_KEY,
         )
         
         instructie = "Vat dit samen in het Nederlands. Gebruik opmaak (vetgedrukt, lijstjes)."
@@ -59,7 +69,7 @@ def maak_samenvatting(verzoek: VideoVerzoek):
             model="google/gemini-2.0-flash-001",
             messages=[
                 {"role": "system", "content": instructie},
-                {"role": "user", "content": full_text[:15000]} # Iets meer tokens
+                {"role": "user", "content": full_text[:15000]}
             ]
         )
         
@@ -69,5 +79,4 @@ def maak_samenvatting(verzoek: VideoVerzoek):
         return {"error": str(e)}
 
 if __name__ == "__main__":
-    # Let op: We gebruiken hier poort 8501, want dat verwacht je server al!
     uvicorn.run(app, host="0.0.0.0", port=8501)
