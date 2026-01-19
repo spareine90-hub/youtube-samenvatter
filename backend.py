@@ -66,7 +66,7 @@ def maak_samenvatting(verzoek: VideoVerzoek):
         instructie = "Vat dit samen in het Nederlands. Gebruik opmaak (vetgedrukt, lijstjes)."
         
         response = client.chat.completions.create(
-            model="google/gemini-2.0-flash-001",
+            model="meta-llama/llama-3.1-70b-instruct",
             messages=[
                 {"role": "system", "content": instructie},
                 {"role": "user", "content": full_text[:15000]}
