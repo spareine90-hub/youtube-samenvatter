@@ -14,7 +14,7 @@ HET_GEHEIME_WACHTWOORD = "geheim"
 
 # NOODOPLOSSING: We zetten de sleutel hier hard in
 # HAAL DE ONDERSTAANDE REGEL WEG EN PLAK JOUW SLEUTEL ERIN!
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
