@@ -21,96 +21,6 @@
     <h1>📺 VideoKern AI</h1>
     
     <input type="text" id="urlInput" placeholder="Plak hier je YouTube Link..." />
-    
-    <button onclick="vatSamen()">Vat Samen 🚀</button>
-    
-    <p id="loading" class="loading">Even geduld, de AI kijkt de video...</p>
-    <div id="resultaat"></div>
-</div>
-
-<script>
-    async function vatSamen() {
-        const url = document.getElementById('urlInput').value;
-        const resultaatDiv = document.getElementById('resultaat');
-        const loadingDiv = document.getElementById('loading');
-
-        // Reset
-        resultaatDiv.style.display = 'none';
-        resultaatDiv.innerText = '';
-        loadingDiv.style.display = 'block';
-
-        try {
-            // We sturen nu alleen nog de URL, geen wachtwoord meer nodig
-            const response = await fetch('/vat-samen', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    url: url, 
-                    wachtwoord: "geheim" // We sturen stiekem nog steeds iets mee voor de vorm, maar het boeit niet meer
-                })
-            });
-
-            const data = await response.json();
-            loadingDiv.style.display = '<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VideoKern AI</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: #f0f2f5; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-
-        .container { 
-            background: white; 
-            padding: 2rem; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-            width: 400px; 
-            text-align: center; 
-            
-            /* --- HIER ZIT DE FIX --- */
-            max-height: 80vh;       /* Maximaal 80% van de schermhoogte */
-            overflow-y: auto;       /* Scrollbalk als het te lang wordt */
-            /* ----------------------- */
-        }
-
-        h1 { color: #333; margin-bottom: 1.5rem; font-size: 1.5rem; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        button:hover { background-color: #cc0000; }
-        
-        #resultaat { 
-            margin-top: 20px; 
-            text-align: left; 
-            white-space: pre-wrap; 
-            background: #f9f9f9; 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #eee; 
-            display: none; 
-            font-size: 0.9rem; 
-        }
-        
-        .loading { color: #666; font-style: italic; display: none; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>📺 VideoKern AI</h1>
-    
-    <input type="text" id="urlInput" placeholder="Plak hier je YouTube Link..." />
-    
     <button onclick="vatSamen()">Vat Samen 🚀</button>
     
     <p id="loading" class="loading">Even geduld, de AI kijkt de video...</p>
@@ -131,37 +41,12 @@
         try {
             const response = await fetch('/vat-samen', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    url: url, 
-                    wachtwoord: "geheim" 
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, wachtwoord: "geheim" })
             });
 
             const data = await response.json();
             loadingDiv.style.display = 'none';
-            resultaatDiv.style.display = 'block';
-
-            if (data.error) {
-                resultaatDiv.innerHTML = "❌ <b>Fout:</b> " + data.error;
-                resultaatDiv.style.color = "red";
-            } else {
-                resultaatDiv.innerText = data.resultaat;
-                resultaatDiv.style.color = "#333";
-            }
-        } catch (error) {
-            loadingDiv.style.display = 'none';
-            resultaatDiv.style.display = 'block';
-            resultaatDiv.innerHTML = "❌ <b>Verbindingsfout:</b> " + error.message;
-            resultaatDiv.style.color = "red";
-        }
-    }
-</script>
-
-</body>
-</html>none';
             resultaatDiv.style.display = 'block';
 
             if (data.error) {
