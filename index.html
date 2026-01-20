@@ -9,19 +9,19 @@
     
     <style>
         body { 
-            background-color: #f8f9fa; /* Lichtgrijze achtergrond */
+            background-color: #f8f9fa;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         .main-content {
-            flex: 1; /* Zorgt dat de footer naar beneden duwt */
+            flex: 1;
             padding-top: 50px;
             padding-bottom: 50px;
         }
         .card {
             border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Mooie zachte schaduw */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border-radius: 15px;
         }
         .btn-youtube {
@@ -36,12 +36,11 @@
         .btn-youtube:hover {
             background-color: #cc0000;
             color: white;
-            transform: translateY(-2px); /* Knop komt iets omhoog */
+            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
         }
-        /* Samenvatting opmaak */
         #resultaat-container {
-            display: none; /* Verbergen tot er resultaat is */
+            display: none;
             margin-top: 30px;
         }
         #resultaat-tekst {
@@ -96,12 +95,21 @@
                     </div>
 
                     <div id="error-box" class="alert alert-danger mt-4" style="display: none;"></div>
-
                 </div>
 
                 <div id="resultaat-container" class="card p-4 p-md-5">
                     <h3 class="card-title text-danger border-bottom pb-2 mb-3">📝 Samenvatting</h3>
+                    
                     <div id="resultaat-tekst"></div>
+
+                    <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                        <button onclick="deelWhatsApp()" class="btn btn-success flex-grow-1">
+                            📱 WhatsApp
+                        </button>
+                        <button onclick="kopieerTekst()" id="kopieerKnop" class="btn btn-outline-secondary flex-grow-1">
+                            📋 Kopieer voor Word
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -122,18 +130,16 @@
             const loadingDiv = document.getElementById('loading');
             const errorBox = document.getElementById('error-box');
 
-            // Reset alles
             resultaatContainer.style.display = 'none';
             errorBox.style.display = 'none';
             resultaatTekst.innerHTML = '';
             loadingDiv.style.display = 'block';
 
             try {
-                // Stuur verzoek naar de server
                 const response = await fetch('/vat-samen', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: url, wachtwoord: "geheim" }) // Wachtwoord wordt genegeerd door server, maar moet mee voor de vorm
+                    body: JSON.stringify({ url: url, wachtwoord: "geheim" })
                 });
 
                 const data = await response.json();
@@ -143,15 +149,42 @@
                     errorBox.innerText = "❌ Fout: " + data.error;
                     errorBox.style.display = 'block';
                 } else {
-                    // Zet de tekst om van Markdown naar mooie HTML
                     resultaatTekst.innerHTML = marked.parse(data.resultaat);
-                    resultaatContainer.style.display = 'block'; // Laat de samenvatting zien
+                    resultaatContainer.style.display = 'block';
                 }
             } catch (error) {
                 loadingDiv.style.display = 'none';
                 errorBox.innerText = "❌ Verbindingsfout: " + error.message;
                 errorBox.style.display = 'block';
             }
+        }
+
+        // Functie voor WhatsApp
+        function deelWhatsApp() {
+            const tekst = document.getElementById('resultaat-tekst').innerText;
+            // Maak een link die WhatsApp opent met de tekst
+            const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(tekst);
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Functie voor Kopiëren (Word)
+        function kopieerTekst() {
+            const tekst = document.getElementById('resultaat-tekst').innerText;
+            navigator.clipboard.writeText(tekst).then(() => {
+                // Verander de tekst van de knop even om te laten zien dat het gelukt is
+                const knop = document.getElementById('kopieerKnop');
+                const oudeTekst = knop.innerHTML;
+                knop.innerHTML = "✅ Gekopieerd!";
+                knop.classList.remove('btn-outline-secondary');
+                knop.classList.add('btn-success');
+                
+                // Na 2 seconden weer terugzetten
+                setTimeout(() => {
+                    knop.innerHTML = oudeTekst;
+                    knop.classList.remove('btn-success');
+                    knop.classList.add('btn-outline-secondary');
+                }, 2000);
+            });
         }
     </script>
 
