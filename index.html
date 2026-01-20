@@ -20,9 +20,7 @@
 <div class="container">
     <h1>📺 VideoKern AI</h1>
     
-    <input type="password" id="wachtwoordInput" placeholder="Wachtwoord (Typ hier: geheim)" />
-    
-    <input type="text" id="urlInput" placeholder="YouTube Link (bijv. https://youtube.com/...)" />
+    <input type="text" id="urlInput" placeholder="Plak hier je YouTube Link..." />
     
     <button onclick="vatSamen()">Vat Samen 🚀</button>
     
@@ -32,7 +30,6 @@
 
 <script>
     async function vatSamen() {
-        const wachtwoord = document.getElementById('wachtwoordInput').value;
         const url = document.getElementById('urlInput').value;
         const resultaatDiv = document.getElementById('resultaat');
         const loadingDiv = document.getElementById('loading');
@@ -43,7 +40,7 @@
         loadingDiv.style.display = 'block';
 
         try {
-            // We sturen nu EXACT de veldnamen die backend.py verwacht: 'url' en 'wachtwoord'
+            // We sturen nu alleen nog de URL, geen wachtwoord meer nodig
             const response = await fetch('/vat-samen', {
                 method: 'POST',
                 headers: {
@@ -51,7 +48,7 @@
                 },
                 body: JSON.stringify({ 
                     url: url, 
-                    wachtwoord: wachtwoord 
+                    wachtwoord: "geheim" // We sturen stiekem nog steeds iets mee voor de vorm, maar het boeit niet meer
                 })
             });
 
@@ -63,7 +60,7 @@
                 resultaatDiv.innerHTML = "❌ <b>Fout:</b> " + data.error;
                 resultaatDiv.style.color = "red";
             } else {
-                resultaatDiv.innerHTML = data.resultaat; // Markdown weergave kan later, nu eerst tekst
+                resultaatDiv.innerText = data.resultaat;
                 resultaatDiv.style.color = "#333";
             }
         } catch (error) {
