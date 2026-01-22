@@ -13,7 +13,7 @@
   youtube-app:
     build: .
     restart: always
-    # HIER GEEN PORTS MEER! Caddy praat intern met deze app.
+    # GEEN ports hier! Caddy praat intern met deze app op poort 5000.
 
   merger-app:
     build:
