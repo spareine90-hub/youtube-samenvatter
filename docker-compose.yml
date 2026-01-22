@@ -1,20 +1,31 @@
 ﻿version: '3'
 
 services:
-  # Je originele video samenvatter (bereikbaar via tldrvideo.nl)
+  caddy:
+    image: caddy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
   youtube-app:
     build: 
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "80:5000"
     restart: always
+    # Geen externe 'ports' mapping meer nodig, Caddy praat intern met poort 5000
 
-  # Je nieuwe Review Merger (bereikbaar via tldrvideo.nl:5001)
   merger-app:
     build:
       context: .
       dockerfile: Dockerfile.merger
-    ports:
-      - "5001:5001"
     restart: always
+    # Caddy praat intern met poort 5001
+
+volumes:
+  caddy_data:
+  caddy_config:
