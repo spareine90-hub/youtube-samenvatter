@@ -22,8 +22,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BatchVerwerker.py" />
-    <Compile Include="module1.py" />
+    <Compile Include="merger_app.py" />
     <Compile Include="YoutubeSamenvatter.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="merger.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

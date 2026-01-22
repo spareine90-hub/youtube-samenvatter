@@ -1,0 +1,15 @@
+﻿ FROM python:3.9-slim
+
+WORKDIR /app
+
+# We installeren alle benodigdheden voor de Merger (Flask, RSS, Scraping)
+RUN pip install flask youtube-transcript-api requests beautifulsoup4 feedparser openai
+
+# Kopieer al je bestanden naar de container
+COPY . .
+
+# De Merger draait op poort 5001
+EXPOSE 5001
+
+# Start specifiek de nieuwe merger app
+CMD ["python", "merger_app.py"]

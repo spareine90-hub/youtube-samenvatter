@@ -1,23 +1,20 @@
-﻿services:
-  app:
-    build: .
-    container_name: app
-    restart: always
-    environment:
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+﻿version: '3'
 
-  caddy:
-    image: caddy:alpine
-    container_name: caddy
-    restart: always
+services:
+  # Je originele video samenvatter (bereikbaar via tldrvideo.nl)
+  youtube-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-    depends_on:
-      - app
+      - "80:5000"
+    restart: always
 
-volumes:
-  caddy_data:
+  # Je nieuwe Review Merger (bereikbaar via tldrvideo.nl:5001)
+  merger-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.merger
+    ports:
+      - "5001:5001"
+    restart: always
