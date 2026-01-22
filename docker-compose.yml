@@ -13,14 +13,14 @@
   youtube-app:
     build: .
     restart: always
-    # Geen externe poorten, Caddy regelt de HTTPS-laag
+    # HIER GEEN PORTS MEER! Caddy praat intern met deze app.
 
   merger-app:
     build:
       context: .
       dockerfile: Dockerfile.merger
     ports:
-      - "5001:5001" # Dit zet de deur naar de merger weer open op poort 5001
+      - "5001:5001"
     restart: always
 
 volumes:

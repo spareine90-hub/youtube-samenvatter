@@ -1,9 +1,3 @@
-﻿# Je hoofdsite (de video samenvatter)
-tldrvideo.nl {
+﻿tldrvideo.nl {
     reverse_proxy youtube-app:5000
-}
-
-# Je nieuwe Review Merger prototype
-merger.tldrvideo.nl {
-    reverse_proxy merger-app:5001
 }
