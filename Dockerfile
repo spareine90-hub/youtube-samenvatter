@@ -2,12 +2,13 @@
 
 WORKDIR /app
 
-# We installeren de nieuwe requirements direct hier (makkelijker)
-RUN pip install fastapi uvicorn youtube-transcript-api openai
+# Kopieer eerst de lijst met benodigdheden
+COPY requirements.txt .
 
+# Installeer de bibliotheken in de container
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Kopieer de rest van de code
 COPY . .
 
-EXPOSE 8501
-
-# Start NIET meer Streamlit, maar jouw nieuwe backend
 CMD ["python", "backend.py"]
