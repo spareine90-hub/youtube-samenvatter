@@ -1,6 +1,4 @@
 ﻿flask
 youtube-transcript-api
-beautifulsoup4
-requests
 openai
 python-dotenv

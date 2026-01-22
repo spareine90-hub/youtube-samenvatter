@@ -1,16 +1,7 @@
 ﻿services:
-  # We laten Caddy even uitgeschakeld of ongewijzigd
-  
   youtube-app:
     build: .
     restart: always
     ports:
-      - "5002:8501" # We mappen de interne poort naar 5002 naar buiten
-
-  merger-app:
-    build:
-      context: .
-      dockerfile: Dockerfile.merger
-    ports:
-      - "5001:5001"
-    restart: always
+      - "5002:5000" # We sturen poort 5002 naar de interne Flask poort 5000
+    env_file: .env # Zorg dat je .env met de nieuwe key ook hier gekoppeld is
