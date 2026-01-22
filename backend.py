@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 # Laad de kluis
 load_dotenv()
 
-app = Flask(__name__)
+# Voeg 'template_folder="."' toe om Flask in de hoofdmap te laten zoeken
+app = Flask(__name__, template_folder=".")
 
 # Configureren van de AI-client
 client = OpenAI(
