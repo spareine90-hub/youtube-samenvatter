@@ -1,19 +1,11 @@
 ﻿services:
-  caddy:
-    image: caddy:latest
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-
+  # We laten Caddy even uitgeschakeld of ongewijzigd
+  
   youtube-app:
     build: .
     restart: always
-    # GEEN ports hier! Caddy praat intern met deze app op poort 5000.
+    ports:
+      - "5002:8501" # We mappen de interne poort naar 5002 naar buiten
 
   merger-app:
     build:
@@ -22,7 +14,3 @@
     ports:
       - "5001:5001"
     restart: always
-
-volumes:
-  caddy_data:
-  caddy_config:
