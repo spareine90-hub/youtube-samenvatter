@@ -1,6 +1,4 @@
-﻿version: '3'
-
-services:
+﻿services:
   caddy:
     image: caddy:latest
     restart: always
@@ -13,18 +11,17 @@ services:
       - caddy_config:/config
 
   youtube-app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    build: .
     restart: always
-    # Geen externe 'ports' mapping meer nodig, Caddy praat intern met poort 5000
+    # Geen externe poorten, Caddy regelt de HTTPS-laag
 
   merger-app:
     build:
       context: .
       dockerfile: Dockerfile.merger
+    ports:
+      - "5001:5001" # Dit zet de deur naar de merger weer open op poort 5001
     restart: always
-    # Caddy praat intern met poort 5001
 
 volumes:
   caddy_data:
