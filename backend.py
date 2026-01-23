@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Laad de kluis
 load_dotenv()
 
-# Voeg 'template_folder="."' toe om Flask in de hoofdmap te laten zoeken
+# Zoek de regel waar je de Flask app definieert en verander deze naar:
 app = Flask(__name__, template_folder=".")
 
 # Configureren van de AI-client
