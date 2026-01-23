@@ -25,11 +25,11 @@ def get_video_id(url):
 def index():
     return render_template('index.html')
 
-@app.route('/summarize', methods=['POST'])
-def summarize():
+@app.route('/vat-samen', methods=['POST'])
+def vat_samen():
     data = request.json
     video_url = data.get('url')
-    video_id = get_video_id(video_url)
+    # ... hier volgt de rest van je logica ...
 
     if not video_id:
         return jsonify({'error': 'Ongeldige YouTube URL'}), 400
