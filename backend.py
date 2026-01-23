@@ -28,11 +28,15 @@ def index():
 @app.route('/vat-samen', methods=['POST'])
 def vat_samen():
     data = request.json
-    video_url = data.get('url')
-    # ... hier volgt de rest van je logica ...
-
+    url = data.get('url')
+    
+    # DE FIX: Definieer video_id door de functie aan te roepen
+    video_id = get_video_id(url) 
+    
     if not video_id:
-        return jsonify({'error': 'Ongeldige YouTube URL'}), 400
+        return jsonify({"error": "Kan geen video-ID vinden in deze URL"}), 400
+        
+    # ... rest van je code (transcript ophalen, OpenAI aanroepen) ...
 
     try:
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['nl', 'en'])
